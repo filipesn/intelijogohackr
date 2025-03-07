@@ -75,11 +75,19 @@ class Level1 extends Phaser.Scene {
             callbackScope: this,
             loop: true
         });
+
+//reinicia o jogo quando se aperta R
+        this.input.keyboard.on('keydown-R', () => {
+            this.gameOver = false;
+            this.score = 0;
+            this.scene.start('Level1');
+        });
     }
 
     update() {
 //para o jogo se tu perede
         if (this.gameOver) {
+            this.scoreText.setText('Score: ' + this.score + ' Press R to retry');
             return;
         }
 //faz o score ficar subindo
@@ -96,15 +104,18 @@ class Level1 extends Phaser.Scene {
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
         }
+        if (this.cursors.down.isDown) {
+            this.player.setVelocityY(800);
+        }
 
         if (this.cursors.up.isDown && this.player.body.touching.down) {
             this.player.setVelocityY(-400);
         }
     }
+
 //detecta colisao
     hitBomb(player, bomb) {
         this.physics.pause();
-        player.setTint(0xff0000);
         player.anims.play('turn');
         this.gameOver = true;
     }
